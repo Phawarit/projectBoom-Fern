@@ -1,0 +1,6 @@
+# pack-refs with: peeled fully-peeled 
+4b986234d916d3701f897d2a21b53af3277ba3f6 refs/heads/fix-for-rails-4-2
+3a9d47370f3fc372acbf2f86c7b8bd930ab74ec1 refs/heads/gh-pages
+fd117e34c1a9988d348b3792bc0eccc266b73753 refs/heads/master
+a120d2668ce8399d7ef4312d68baa287f0dd3249 refs/tags/2.0.2
+^777633aa564f8457c999ddb96afa4c5ae18d319f
