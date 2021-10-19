@@ -1,0 +1,33 @@
+<!-- replace 'parent_object' with your parent object name -->
+<%
+
+	f_index = "#{f.index}".to_s
+	object_name = "parent_object_problem_suggesstions_attributes_#{f_index}".to_sym
+	project_select_id = "parent_object_problem_suggesstions_attributes_#{f_index}_project_id".to_sym
+%>
+<tr class="nested-fields">
+	<td class="text-top">
+		<%= f.input :sorting, wrapper: :nested_form %>
+	</td>
+	<td class="text-top">
+		<%= f.input :description, wrapper: :nested_form %>
+		<div style="width:100%;">
+			<%= ProblemSuggesstion.human_attribute_name :percent_of_task %>
+		</div>
+
+		<div class="project" style="display: flex;">
+			<%= f.input  :percent_of_task, wrapper: :nested_form, :min=>1, :max=>100, :class=>"bar", :value=>50, :style=>"width:80%;" %>
+		</div>
+	</td>
+	<td class="text-top">
+		<%= f.input :next_step, wrapper: :nested_form %>
+	</td>
+	<% unless action_name == "show" %>
+		<td>
+			<%= link_to_remove_association f, class: "btn btn-danger" do %>
+				<i class='fa fa-trash-o'></i>
+			<% end %>
+			<script type="text/javascript">$(document).ready( function() { jQuery(function($){ $("#parent_object_problem_suggesstions_attributes_<%= f.index %>_project").chosen({width: "100%"});  }); });</script>
+		</td>
+	<% end %>
+</tr>

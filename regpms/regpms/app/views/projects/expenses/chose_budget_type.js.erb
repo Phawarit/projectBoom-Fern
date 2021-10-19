@@ -1,0 +1,14 @@
+$("#expense_budget_type_id").val("<%= @budget_type ? @budget_type.id : "" %>");
+$("expense_budget_type_id").trigger('chosen:updated');
+// remove all options
+$("#expense_sub_budget_type_id").empty();
+// insert blank option
+$("#expense_sub_budget_type_id").append($('<option></option>'));
+// insert new options
+<% if @budget_type %>
+	<% @budget_type.sub_budget_types.sort_by {|a| a.to_s}.each do |sub_budget_type| %>
+		$("#expense_sub_budget_type_id").append($('<option></option>').attr('value', <%= sub_budget_type.id %>).text('<%= sub_budget_type.to_s %>'));
+	<% end %>
+<% end %>
+// chosen update
+$("#expense_sub_budget_type_id").trigger('chosen:updated');

@@ -1,0 +1,14 @@
+$("#project_budgets_attributes_"+"<%=@dropdown_id%>"+"_budget_type_id").val("<%= @budget_type ? @budget_type.id : "" %>");
+$("#project_budgets_attributes_"+"<%=@dropdown_id%>"+"_budget_type_id").trigger('chosen:updated');
+// remove all options
+$("#project_budgets_attributes_"+"<%=@dropdown_id%>"+"_sub_budget_type_id").empty();
+// insert blank option
+$("#project_budgets_attributes_"+"<%=@dropdown_id%>"+"_sub_budget_type_id").append($('<option></option>'));
+// insert new options
+<% if @budget_type %>
+	<% @budget_type.sub_budget_types.sort_by {|a| a.to_s}.each do |sub_budget_type| %>
+		$("#project_budgets_attributes_"+"<%=@dropdown_id%>"+"_sub_budget_type_id").append($('<option></option>').attr('value', <%= sub_budget_type.id %>).text('<%= sub_budget_type.to_s %>'));
+	<% end %>
+<% end %>
+// chosen update
+$("#project_budgets_attributes_"+"<%=@dropdown_id%>"+"_sub_budget_type_id").trigger('chosen:updated');

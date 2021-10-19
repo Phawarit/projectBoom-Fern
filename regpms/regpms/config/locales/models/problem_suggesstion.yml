@@ -1,0 +1,34 @@
+en:
+  activerecord:
+    models:
+      problem_suggesstion: ProblemSuggesstion
+    attributes:
+      problem_suggesstion:
+        workflow_state: Status
+        workflow_state_updater: Status updater
+        project: Project
+        sorting: Sorting
+        description: Description
+        next_step: Next step
+        created_by: Created by
+        updated_by: Updated by 
+        created_at: Created at
+        updated_at: Updated at
+        percent_of_task: Percent of task
+th:
+  activerecord:
+    models:
+      problem_suggesstion: ProblemSuggesstion
+    attributes:
+      problem_suggesstion:
+        workflow_state: สถานะ
+        workflow_state_updater: เปลี่ยนสถานะโดย
+        project: โครงการ
+        sorting: ลำดับที่
+        description: รายละเอียด
+        next_step: ขั้นตอนถัดไป
+        created_by: สร้างโดย
+        updated_by: แก้ไขโดย
+        created_at: สร้างเมื่อ
+        updated_at: แก้ไขเมื่อ
+        percent_of_task: ร้อยละของงาน

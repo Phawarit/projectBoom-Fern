@@ -1,0 +1,19 @@
+en:
+  activerecord:
+    models:
+      wage_rate: Wage Rate
+    attributes:
+      wage_rate:
+        amount: จำนวนเงิน
+th:
+  activerecord:
+    models:
+      wage_rate: อัตราค่าตอบแทน
+    attributes:
+      wage_rate:
+        amount: จำนวนเงิน
+        sub_budget_type: ประเภทงบประมาณ(ย่อย)
+        "no": ที่
+        name: อัตราค่าตอบแทน (บาท/หน่วย)
+        workflow_state: สถานะ
+

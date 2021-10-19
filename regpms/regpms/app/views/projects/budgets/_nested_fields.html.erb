@@ -1,0 +1,102 @@
+<!-- replace 'project' with your parent object name -->
+<% 
+	f_index = "#{f.index}".to_s
+	object_name = "project_budgets_attributes_#{f_index}".to_sym
+    project_select_id = "project_budgets_attributes_#{f_index}_project_id".to_sym   
+    budget_type_select_id = "project_budgets_attributes_#{f_index}_budget_type_id".to_sym
+    #allowance_rate_select_id ="project_budges_attributes_#{f_index}_wage_rate_id".to_sym
+%>
+
+<tr class="nested-fields">
+    <td class="text-top">
+        <%= f.input :sorting, wrapper: :nested_form, input_html: {class: "text-right"} %>
+    </td>
+    <td class="text-top selector">
+    <%= render partial: "/projects/budgets/budget_type_fields" , locals: {f: f}%>
+    </td>
+
+    <td class="text-top">
+        <%= f.input :description, wrapper: :nested_form %>
+    </td>
+    
+    <td class="text-top">
+        <%= f.input :hr, wrapper: :nested_form, input_html: {class: 'text-right budget-hour'}%>
+    </td>
+    <td class="text-top">
+        <%= f.input :amount, wrapper: :nested_form, input_html: {class: "text-right budget-amount"} %>
+    </td>
+    <% unless action_name == "show" %>
+        <td class="text-top">
+            <%= link_to_remove_association f, class: "btn btn-danger budget-amount-delete" do %>
+               <i class='fa fa-trash-o'></i>
+            <% end %>
+            <script type="text/javascript">
+            $(document).ready( function() 
+                { jQuery(function($){ 
+                    $("#project_budgets_attributes_<%= f.index %>_project").chosen({width: "100%"}); 
+                    
+                }); 
+                });</script>
+            <script type="text/javascript">
+            
+            $(document).ready( function() 
+            
+            { jQuery(function($){ 
+                $("#project_budgets_attributes_<%= f.index %>_budget_type").chosen({width: "100%"}); 
+                $("#project_budgets_attributes_<%= f.index %>_budget_type_id").change(function(event){
+                    var dropdown_id = $(this).attr('id').split('_')[3]
+
+                    $.ajax({
+                        url: '<%= chose_budget_type_projects_budgets_path %>',
+                        type: 'post',
+                        data: {budget_type_id: $(this).val(), dropdown_id: dropdown_id},
+                        dataType: 'script'
+                    });
+                
+            });
+            $("#project_budgets_attributes_<%= f.index %>_sub_budget_type_id").change(function(event){
+                var dropdown_id = $(this).attr('id').split('_')[3]
+
+                $.ajax({
+                    url: '<%= chose_sub_budget_type_projects_budgets_path %>',
+                    type: 'post',
+                    data: {sub_budget_type_id: $(this).val(), dropdown_id: dropdown_id},
+                    dataType: 'script'
+                });           
+                });     
+                var rate = 0
+                var hr = 0
+                var total = 0
+                $("#project_budgets_attributes_<%= f.index %>_wage_rate_id").change(function(){
+                    rate = $('#project_budgets_attributes_<%= f.index %>_wage_rate_id option:selected').text();
+                    var hr = $('#project_budgets_attributes_<%= f.index %>_hr').val();
+                    
+                    total = hr * rate
+                    console.log(total)
+                    $("#project_budgets_attributes_<%= f.index %>_amount").val(total);
+
+                })
+
+                $("#project_budgets_attributes_<%= f.index %>_hr").keyup(function(){
+                    rate = parseFloat(rate);
+                    var hr = $('#project_budgets_attributes_<%= f.index %>_hr').val();
+                    hr = parseFloat(hr);
+                    total = hr*rate
+                    v = !isNaN(total) ? total : 0;
+                    $("#project_budgets_attributes_<%= f.index %>_amount").val(v);
+
+                    
+            });
+            });
+            });
+
+            </script>
+        </td>
+    <% end %>
+</tr>
+
+
+
+
+
+

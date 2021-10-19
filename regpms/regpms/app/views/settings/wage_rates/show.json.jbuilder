@@ -1,0 +1,1 @@
+json.extract! @wage_rate, :id, :to_s, :workflow_state, :workflow_state_updater_id, :kku_strategic_id, :no, :amount, :created_at, :updated_at

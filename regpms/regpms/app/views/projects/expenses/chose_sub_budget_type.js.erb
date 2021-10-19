@@ -1,0 +1,14 @@
+$("#expense_sub_budget_type_id").val("<%= @sub_budget_type ? @sub_budget_type.id : "" %>");
+$("expense_sub_budget_type_id").trigger('chosen:updated');
+// remove all options
+$("#expense_wage_rate_id").empty();
+// insert blank option
+$("#expense_wage_rate_id").append($('<option></option>'));
+// insert new options
+<% if @sub_budget_type %>
+	<% @sub_budget_type.wage_rates.sort_by {|a| a.to_s}.each do |wage_rate| %>
+		$("#expense_wage_rate_id").append($('<option></option>').attr('value', <%= wage_rate.id %>).text('<%= wage_rate.to_s %>'));
+	<% end %>
+<% end %>
+// chosen update
+$("#expense_wage_rate_id").trigger('chosen:updated');

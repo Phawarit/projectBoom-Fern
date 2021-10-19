@@ -1,0 +1,2 @@
+module WageRatesHelper
+end

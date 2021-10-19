@@ -1,0 +1,83 @@
+<!-- replace 'project' with your parent object name -->
+<%
+	f_index = "#{f.index}".to_s
+	object_name = "project_responsibles_attributes_#{f_index}".to_sym
+	project_select_id = "project_responsibles_attributes_#{f_index}_project_id".to_sym
+	user_select_id = "project_responsibles_attributes_#{f_index}_user_id".to_sym
+	prefix_form_id = "project_responsibles_attributes_#{f_index}_prefix".to_sym
+	firstname_form_id = "project_responsibles_attributes_#{f_index}_firstname".to_sym
+	lastname_form_id = "project_responsibles_attributes_#{f_index}_lastname".to_sym
+	responsibility_form_id = "project_responsibles_attributes_#{f_index}_responsibility".to_sym
+	percent_of_work_form_id = "project_responsibles_attributes_#{f_index}_percent_of_work".to_sym
+
+%>
+<tr class="nested-fields">
+	<td class="text-top">
+		<%= f.input :sorting, wrapper: :nested_form, input_html: {class: "text-right"} %>
+	</td>
+
+	<td class="text-top">
+		<%= f.input :firstname, wrapper: :nested_form %>
+	</td>
+	<td class="text-top">
+		<%= f.input :lastname, wrapper: :nested_form %>
+	</td>
+
+	<td class="text-top" width="40%">
+		<%= f.input :responsibility, wrapper: :nested_form %>
+	</td>
+	<td class="text-top">
+		<%= f.input :percent_of_work, wrapper: :nested_form, input_html: { max: "100" , onchange:"percent(this)"} %>
+	</td>
+	<% unless action_name == "show" %>
+		<td class="text-top">
+			<%= link_to_remove_association f, class: "btn btn-danger" do %>
+				<i class='fa fa-trash-o'></i>
+			<% end %>
+			<script type="text/javascript">$(document).ready( function() { jQuery(function($){ $("#project_responsibles_attributes_<%= f.index %>_project").chosen({width: "100%"}); }); });</script>
+			<script type="text/javascript">$(document).ready( function() { jQuery(function($){ $("#project_responsibles_attributes_<%= f.index %>_user").chosen({width: "100%"}); }); });</script>
+			<script type="text/javascript">
+				jQuery(function($) {
+					$('#<%= user_select_id %>').change(function(event){
+						$.ajax({
+							url: '<%= chose_user_projects_responsibles_path %>',
+							type: 'post',
+							data: {user_id: $(this).val(), user_select_id: '<%= user_select_id %>', prefix_form_id: '<%= prefix_form_id %>', firstname_form_id: '<%= firstname_form_id %>', lastname_form_id: '<%= lastname_form_id %>', responsibility_form_id: '<%= responsibility_form_id %>', percent_of_work_form_id: '<%= percent_of_work_form_id %>'},
+							dataType: 'script'
+						});
+					});
+				});
+			</script>
+		</td>
+	<% end %>
+</tr>
+<script >
+	var sum = 0
+	function percent(input){
+		console.log(input.value)
+		if (input.value > 100) {
+			alert("ร้อยละของงานที่รับผิดชอบไม่ควรเกิน 100%") 
+			input.value = ""
+		}
+		if (sum > 100) {
+			alert("ร้อยละของงานที่รับผิดชอบไม่ควรเกิน 100%") 
+			console.log(input.value,"kk")
+		}
+	}
+	$( document ).ready(function() {
+		b()
+		$('input[name*="percent_of_work"]').change(function() {
+			// $($('input[name*="percent_of_work"]')).each(function() {
+    		// 	sum += parseInt(this.value, 10);
+			// });
+			// console.log(sum)
+			
+		});
+		function b(){
+			$($('input[name*="percent_of_work"]')).each(function() {
+    			sum += parseInt(this.value, 10);
+			});
+			console.log(sum)
+		}
+	});
+</script>

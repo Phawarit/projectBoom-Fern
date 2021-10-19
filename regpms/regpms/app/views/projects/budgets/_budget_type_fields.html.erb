@@ -1,0 +1,13 @@
+<%= f.association :budget_type, wrapper: :full, collection: (BudgetType.all_enabled + (f.object.budget_type.nil? ? [] : [f.object.budget_type])).uniq.sort_by {|asso| asso.to_s}, value_method: :id, label_method: :to_s, input_html: {data: {placeholder: t(:choose)}} %>
+<%= render partial: "/settings/budget_types/chosen_select", locals: {object_name: :budget, no_create: true} %>
+
+<% sub_budget_types = f.object.budget_type ? f.object.budget_type.sub_budget_types : [] %>
+<%= f.association :sub_budget_type, wrapper: :full, collection: sub_budget_types.uniq.sort_by {|asso| asso.to_s}, value_method: :id, label_method: :to_s, input_html: {data: {placeholder: t(:choose)},class: 'text-right budget-sub-budget'} %>
+<%= render partial: "/settings/sub_budget_types/chosen_select", locals: {object_name: :budget, no_create: true} %>
+
+<% wage_rates = f.object.sub_budget_type ? f.object.sub_budget_type.wage_rates : [] %>
+<%= f.association :wage_rate, wrapper: :full, collection: wage_rates.uniq.sort_by {|asso| asso.to_s}, value_method: :id, label_method: :to_s, input_html: {data: {placeholder: t(:choose)},class: 'text-right budget-allowance-rate'} %>
+<%= render partial: "/settings/wage_rates/chosen_select", locals: {object_name: :budget, no_create: true} %>
+
+
+

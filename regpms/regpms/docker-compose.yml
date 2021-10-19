@@ -1,0 +1,22 @@
+# docker-compose.yml
+regpms:
+  restart: always
+  build: ./
+  #command: passenger start -a 0.0.0.0 -p 3000 -e production
+  ports:
+    - 3000:443
+    - 3002:80
+    - 3003:3000
+  volumes:
+    # Page content
+#    - ./nginx-conf/webapp.conf:/etc/nginx/sites-enabled/webapp.conf
+    - ./nginx-conf/webapp.conf:/etc/nginx/sites-enabled/default
+    - ./:/home/app/webapp
+#    - /data/ftp/pmsfile:/home/app/webapp/public/files
+#    - /etc/letsencrypt/live/reg2.kku.ac.th/fullchain.pem:/etc/letsencrypt/live/reg2.kku.ac.th/fullchain.pem
+#    - /etc/letsencrypt/live/reg2.kku.ac.th/privkey.pem:/etc/letsencrypt/live/reg2.kku.ac.th/privkey.pem
+#    - /etc/localtime:/etc/localtime
+#    - /etc/timezone:/etc/timezone
+#
+    # webapp.conf:
+#    - ./config:/etc/nginx/sites-enabled/

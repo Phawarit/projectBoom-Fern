@@ -1,0 +1,2 @@
+module AllowanceRatesHelper
+end

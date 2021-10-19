@@ -1,0 +1,1 @@
+json.extract! @sub_budget_type, :id, :to_s, :workflow_state, :workflow_state_updater_id, :budget_type_id, :no, :name, :created_at, :updated_at

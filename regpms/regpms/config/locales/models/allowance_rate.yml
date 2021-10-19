@@ -1,0 +1,18 @@
+en:
+  activerecord:
+    models:
+      allowance_rate: Allowance Rate
+    attributes:
+      allowance_rate:
+        amount: จำนวนเงิน
+th:
+  activerecord:
+    models:
+      allowance_rate: อัตราค่าตอบแทน
+    attributes:
+      allowance_rate:
+        amount: จำนวนเงิน
+        sub_budget_type: ประเภทงบประมาณ(ย่อย)
+        "no": ที่
+        name: ชื่อ
+
