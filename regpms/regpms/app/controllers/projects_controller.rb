@@ -120,7 +120,7 @@ class ProjectsController < OrbController
     margin_bottom = 25
     margin_left = 25
 
-    pdf = Prawn::Document.new :page_size => 'A4', :margin => [margin_top, margin_right, margin_bottom, margin_left]
+    pdf = Prawn::Document.new :page_size => 'A4', :margin => [margin_top, margin_right, margin_bottom, margin_left],  :background => "#{Rails.root.to_s}/app/assets/images/logo_regpms.jpg"
 
     pdf.font_families.update("THSarabun" => {
       :normal => File.join("public", "fonts", "THSarabun.ttf"),
@@ -131,30 +131,24 @@ class ProjectsController < OrbController
 
     pdf.font "THSarabun", size: 14
     
-    pdf.text "<b>แบบฟอร์ม</b>", inline_format: true, align: :center
+    pdf.text "<b>แบบเสนอโครงการ สำนักบริหารและพัฒนาวิชาการ ประจำปีงบประมาณ #{@project.year}</b> ", inline_format: true, align: :center
     pdf.move_down 10
 
     if @project.project
-      pdf.text "<b>1. #{Project.human_attribute_name(:name)}</b> #{@project.project.to_s}", inline_format: true
+      pdf.text "<b>1. ประเภทโครงการ: </b>", inline_format: true
+      pdf.text "<b>2. #{Project.human_attribute_name(:name)}</b> #{@project.project.to_s}", inline_format: true
       pdf.move_down 10
-      pdf.text "<b>2. #{Project.human_attribute_name(:name_sub)}</b> #{@project.to_s}", inline_format: true
+      pdf.text "<b>3. #{Project.human_attribute_name(:name_sub)}</b> #{@project.to_s}", inline_format: true
       pdf.move_down 10
     else
-      pdf.text "<b>1. #{Project.human_attribute_name(:name)}</b> #{@project.to_s}", inline_format: true
+      pdf.text "<b>1. ประเภทโครงการ: </b>", inline_format: true
+      pdf.text "<b>2. #{Project.human_attribute_name(:name)}</b> #{@project.to_s}", inline_format: true
       pdf.move_down 10
-      pdf.text "<b>2. #{Project.human_attribute_name(:name_sub)}</b> -", inline_format: true
+      pdf.text "<b>3. #{Project.human_attribute_name(:name_sub)}</b> -", inline_format: true
       pdf.move_down 10
     end
 
-    pdf.text "<b>3. #{Project.human_attribute_name(:policy)}</b> #{@project.policy.to_s}", inline_format: true
-    pdf.move_down 10
-
-    pdf.text "<b>4. #{Project.human_attribute_name(:responsibles)}</b>", inline_format: true
-    pdf.indent 30 do
-      @project.responsibles.each do |responsible|
-        pdf.text "#{responsible.to_s}", indent_paragraphs: 30
-      end
-    end
+    pdf.text "<b>4. #{Project.human_attribute_name(:policy)}</b> #{@project.policy.to_s}", inline_format: true
     pdf.move_down 10
 
     pdf.text "<b>5. #{Project.human_attribute_name(:rationale)}</b>", inline_format: true
@@ -169,45 +163,7 @@ class ProjectsController < OrbController
     end
     pdf.move_down 10
 
-    pdf.text "<b>7. #{Project.human_attribute_name(:time_plan)}</b> #{@project.time_plan(:thai)}", inline_format: true
-    pdf.move_down 10
-
-    pdf.text "<b>8. #{Project.human_attribute_name(:budgets)}</b> #{@project.budget_amount.to_s_decimal_comma} <b>บาท</b>", inline_format: true
-    pdf.indent 30 do
-      @project.budgets.each do |budget|
-        pdf.text "#{budget.to_s}", indent_paragraphs: 30
-      end
-    end
-    pdf.move_down 10
-
-    pdf.text "<b>9. #{Project.human_attribute_name(:budget_plan)}</b>", inline_format: true
-    pdf.indent 30 do
-      data = []
-      data << [
-        {content: "<b>#{Project.human_attribute_name :budget_plan_q1}<br/>#{Project.human_attribute_name :budget_plan_q1_month}</b>", inline_format: true, align: :center},
-        {content: "<b>#{Project.human_attribute_name :budget_plan_q2}<br/>#{Project.human_attribute_name :budget_plan_q2_month}</b>", inline_format: true, align: :center},
-        {content: "<b>#{Project.human_attribute_name :budget_plan_q3}<br/>#{Project.human_attribute_name :budget_plan_q3_month}</b>", inline_format: true, align: :center},
-        {content: "<b>#{Project.human_attribute_name :budget_plan_q4}<br/>#{Project.human_attribute_name :budget_plan_q4_month}</b>", inline_format: true, align: :center},
-      ]
-      data << [
-        {content: "#{@project.budget_plan_q1.to_s_decimal_comma}", inline_format: true, align: :center},
-        {content: "#{@project.budget_plan_q2.to_s_decimal_comma}", inline_format: true, align: :center},
-        {content: "#{@project.budget_plan_q3.to_s_decimal_comma}", inline_format: true, align: :center},
-        {content: "#{@project.budget_plan_q4.to_s_decimal_comma}", inline_format: true, align: :center}
-      ]
-      pdf.table data, width: 400
-    end
-    pdf.move_down 10
-
-    pdf.text "<b>10. #{Project.human_attribute_name(:benefits)}</b>", inline_format: true
-    pdf.indent 30 do
-      @project.benefits.each do |benefit|
-        pdf.text "#{benefit.to_s}", indent_paragraphs: 30
-      end
-    end
-    pdf.move_down 10
-
-    pdf.text "<b>11. #{Project.human_attribute_name(:indicators)}</b>", inline_format: true
+    pdf.text "<b>7. #{Project.human_attribute_name(:indicators)}</b>", inline_format: true
     pdf.indent 30 do
       data = []
       data << [
@@ -229,6 +185,44 @@ class ProjectsController < OrbController
         ]
       end
       pdf.table data, width: 500, header: true, column_widths: {1 => 50, 2 => 50, 3 => 50, 4 => 50, 5 => 50}
+    end
+    pdf.move_down 10
+
+    pdf.text "<b>8. #{Project.human_attribute_name(:benefits)}</b>", inline_format: true
+    pdf.indent 30 do
+      @project.benefits.each do |benefit|
+        pdf.text "#{benefit.to_s}", indent_paragraphs: 30
+      end
+    end
+    pdf.move_down 10
+
+    pdf.text "<b>9. #{Project.human_attribute_name(:time_plan)}</b> #{@project.time_plan(:thai)}", inline_format: true
+    pdf.move_down 10
+
+    pdf.text "<b>10. #{Project.human_attribute_name(:budgets)}</b> #{@project.budget_amount.to_s_decimal_comma} <b>บาท</b>", inline_format: true
+    pdf.indent 30 do
+      @project.budgets.each do |budget|
+        pdf.text "#{budget.to_s}", indent_paragraphs: 30
+      end
+    end
+    pdf.move_down 10
+
+    pdf.text "<b>11. #{Project.human_attribute_name(:budget_plan)}</b>", inline_format: true
+    pdf.indent 30 do
+      data = []
+      data << [
+        {content: "<b>#{Project.human_attribute_name :budget_plan_q1}<br/>#{Project.human_attribute_name :budget_plan_q1_month}</b>", inline_format: true, align: :center},
+        {content: "<b>#{Project.human_attribute_name :budget_plan_q2}<br/>#{Project.human_attribute_name :budget_plan_q2_month}</b>", inline_format: true, align: :center},
+        {content: "<b>#{Project.human_attribute_name :budget_plan_q3}<br/>#{Project.human_attribute_name :budget_plan_q3_month}</b>", inline_format: true, align: :center},
+        {content: "<b>#{Project.human_attribute_name :budget_plan_q4}<br/>#{Project.human_attribute_name :budget_plan_q4_month}</b>", inline_format: true, align: :center},
+      ]
+      data << [
+        {content: "#{@project.budget_plan_q1.to_s_decimal_comma}", inline_format: true, align: :center},
+        {content: "#{@project.budget_plan_q2.to_s_decimal_comma}", inline_format: true, align: :center},
+        {content: "#{@project.budget_plan_q3.to_s_decimal_comma}", inline_format: true, align: :center},
+        {content: "#{@project.budget_plan_q4.to_s_decimal_comma}", inline_format: true, align: :center}
+      ]
+      pdf.table data, width: 400
     end
     pdf.move_down 10
 
@@ -258,6 +252,14 @@ class ProjectsController < OrbController
     pdf.indent 30 do
       @project.project_images.each do |project_image|
         pdf.image "#{project_image.image.path}", width: 400
+      end
+    end
+    pdf.move_down 10
+
+    pdf.text "<b>15. #{Project.human_attribute_name(:responsibles)}</b>", inline_format: true
+    pdf.indent 30 do
+      @project.responsibles.each do |responsible|
+        pdf.text "#{responsible.to_s}", indent_paragraphs: 30
       end
     end
     pdf.move_down 10

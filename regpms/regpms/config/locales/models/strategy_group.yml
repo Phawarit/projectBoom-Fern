@@ -15,13 +15,13 @@ en:
 th:
   activerecord:
     models:
-      strategy_group: ส่วนแผนสำนักฯ
+      strategy_group: ประเภทโครงการ
     attributes:
       strategy_group:
         workflow_state: สถานะ
         workflow_state_updater: เปลี่ยนสถานะโดย
-        "no": ส่วนแผนที่
-        name: ชื่อส่วนแผน
+        "no": ประเภทโครงการที่
+        name: ชื่อประเภทโครงการ
         created_by: สร้างโดย
         updated_by: แก้ไขโดย
         created_at: สร้างเมื่อ

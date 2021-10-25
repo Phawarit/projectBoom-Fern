@@ -1,7 +1,9 @@
 <div class="page-header">
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
   <h1><%= Project.model_name.human %><small><%= action_name %></small></h1>
 </div>
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <!-- Widget Row Start grid -->
 <div class="row" id="powerwidgets">
   <div class="col-md-12 bootstrap-grid">
@@ -35,9 +37,7 @@
             </div>
             <div class="panel-body">
               <fieldset>
-
-                <%= f.input :year_eq, collection: (2010..(Date.current.year + 3)).collect { |y| [y + 543, y] }.reverse, required: false, label: "ปีงบประมาณ", input_html: {class: "form-control chosen-select", data: {placeholder: t(:all)}} %>
-                <%= f.input :code_cont, required: false, label: Project.human_attribute_name(:code) %>
+              <%= f.input :year_eq, collection: (2010..(Date.current.year + 3)).collect { |y| [y + 543, y] }.reverse, required: false, label: "ปีงบประมาณ", input_html: {class: "form-control chosen-select", data: {placeholder: t(:all)}} %>
                 <%= f.input :name_cont, required: false, label: Project.human_attribute_name(:name) %>
                 <%= f.input :project_id_eq, collection: Project.all.uniq.sort_by { |asso| asso.to_s }, value_method: :id, label_method: :to_s, required: false, label: Project.human_attribute_name(:project), input_html: {class: "form-control chosen-select", data: {placeholder: t(:all)}} %>
                 <%= f.input :policy_id_eq, collection: Policy.all.uniq.sort_by { |asso| asso.to_s }, value_method: :id, label_method: :to_s, required: false, label: Project.human_attribute_name(:policy), input_html: {class: "form-control chosen-select", data: {placeholder: t(:all)}} %>
@@ -82,9 +82,8 @@
           <input type="radio" id="all_project" name="drone" value="1" onchange="handleChange(this);">
           <label >แสดงโครงการทั้งหมด</label>
         </div>
-
         <div>
-          <input type="radio" id="project1" name="drone" value="2" onchange="handleChange(this);">
+          <input type="radio" id="main_project" name="drone" value="2" onchange="handleChange(this);">
           <label >แสดงโครงการหลัก</label>
         </div>
         <div class="clearfix"></div>
@@ -109,7 +108,7 @@
           </thead>
           <tbody>
           <% @projects.each do |project|  %>
-            <tr id="project_<%= project.id %>" style="<%= "background-color:#BCDFEF ;" if project.level == 1 %>">
+            <tr id="project_<%= project.id %>" class ="<%= "select_project"  if project.level == 2 %>" >
               <td class="tools text-top" class="text-top">
                 <%= render partial: "/index_row_actions", locals: {
                     resource_class: Project, resource: project,
@@ -158,9 +157,8 @@
   </div>
 </div>
 <!-- /Widgets Row End Grid-->
-
 <script>
-    $('#advanced-visibled-visibled').on('click', function () {
+     $('#advanced-visibled-visibled').on('click', function () {
         $('#quick-search').addClass('hide');
         $('#advanced-search').removeClass('hide');
     });
@@ -168,9 +166,26 @@
         $('#quick-search').removeClass('hide');
         $('#advanced-search').addClass('hide');
     });
-  console.log(document.querySelector('input[name="drone"]').value)
-  
-  function handleChange(src) {
-  alert(src.value);
-  }
+    
+    $('#all_project').on('click', function () {
+      $('.select_project').show();
+        Swal.fire({
+        position: 'center',
+        icon: 'success',
+        title: 'เเสดงโครงการทั้งหมด',
+        showConfirmButton: false,
+        timer: 1500
+      })
+    });
+
+    $('#main_project').on('click', function () {
+      $('.select_project').hide();
+        Swal.fire({
+        position: 'center',
+        icon: 'success',
+        title: 'เเสดงโครงการหลัก',
+        showConfirmButton: false,
+        timer: 1500
+      })
+    });
 </script>

@@ -52,32 +52,37 @@
 	<% end %>
 </tr>
 <script >
-	var sum = 0
+
+	function sum_percent_of_work(){
+		let sum = 0
+		$($('input[name*="percent_of_work"]')).each(function() {
+			sum += parseInt(this.value);
+
+		});
+		return sum
+	}
+	
 	function percent(input){
 		console.log(input.value)
 		if (input.value > 100) {
-			alert("ร้อยละของงานที่รับผิดชอบไม่ควรเกิน 100%") 
+			Swal.fire({
+				position: 'center',
+				icon: 'error',
+				text: 'ร้อยละของงานที่รับผิดชอบไม่ควรเกิน 100%',
+				showConfirmButton: false,
+				timer: 1500
+			}) 
 			input.value = ""
 		}
 		if (sum > 100) {
-			alert("ร้อยละของงานที่รับผิดชอบไม่ควรเกิน 100%") 
+			Swal.fire({
+				position: 'center',
+				icon: 'success',
+				text: 'ร้อยละของงานที่รับผิดชอบไม่ควรเกิน 100%',
+				showConfirmButton: false,
+				timer: 1500
+			}) 
 			console.log(input.value,"kk")
 		}
 	}
-	$( document ).ready(function() {
-		b()
-		$('input[name*="percent_of_work"]').change(function() {
-			// $($('input[name*="percent_of_work"]')).each(function() {
-    		// 	sum += parseInt(this.value, 10);
-			// });
-			// console.log(sum)
-			
-		});
-		function b(){
-			$($('input[name*="percent_of_work"]')).each(function() {
-    			sum += parseInt(this.value, 10);
-			});
-			console.log(sum)
-		}
-	});
 </script>

@@ -16,17 +16,17 @@ en:
 th:
   activerecord:
     models:
-      measure: มาตรการสำนักฯ
+      measure: แผนงานสำนักฯ
     attributes:
       measure:
         workflow_state: สถานะ
         workflow_state_updater: เปลี่ยนสถานะโดย
         tactic: กลยุทธ
-        "no": มาตรการที่
-        name: ชื่อมาตรการ
+        "no": แผนงานที่ที่
+        name: ชื่อแผนงาน
         created_by: สร้างโดย
         updated_by: แก้ไขโดย
         created_at: สร้างเมื่อ
         updated_at: แก้ไขเมื่อ
-        strategy_group: ส่วนแผน
+        strategy_group: ประเภทโครงการ
         strategy: ยุทธศาสตร์

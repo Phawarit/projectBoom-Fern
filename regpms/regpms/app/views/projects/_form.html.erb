@@ -18,6 +18,9 @@
 
       <fieldset>
 
+        <%= f.association :strategy_group, :required => false, collection: (StrategyGroup.all_enabled + (f.object.strategy_group.nil? ? [] : [f.object.strategy_group])).uniq.sort_by { |asso| asso.to_s }, disabled: (true if f.object.workflow_state == "project_approved" || f.object.workflow_state == "project_expensed" && current_user.role_names.grep(/acc/).empty? == true), value_method: :id, label_method: :to_s, wrapper: :full, input_html: {data: {placeholder: t(:choose)}} %>
+        <%= render partial: "/settings/strategy_groups/chosen_select", locals: {object_name: :project} %>
+
         <%= f.input :name, wrapper: :full, disabled: (true if f.object.workflow_state == "project_approved" || f.object.workflow_state == "project_expensed" && current_user.role_names.grep(/acc/).empty? == true) %>
 
         <%= f.association :project, collection: (Project.where(["workflow_state NOT IN (?)", [:terminated]]) + (f.object.project.nil? ? [] : [f.object.project]) - [f.object]).uniq.sort_by { |asso| asso.to_s }, value_method: :id, label_method: :to_s, wrapper: :full, disabled: (true if f.object.workflow_state == "project_approved" || f.object.workflow_state == "project_expensed" && current_user.role_names.grep(/acc/).empty? == true), input_html: {data: {placeholder: t(:choose)}} %>
@@ -43,9 +46,6 @@
           <%= render partial: "/settings/policies/chosen_select", locals: {object_name: :project} %>
         <% end %>
 
-        <%= f.association :strategy_group, :required => false, collection: (StrategyGroup.all_enabled + (f.object.strategy_group.nil? ? [] : [f.object.strategy_group])).uniq.sort_by { |asso| asso.to_s }, disabled: (true if f.object.workflow_state == "project_approved" || f.object.workflow_state == "project_expensed" && current_user.role_names.grep(/acc/).empty? == true), value_method: :id, label_method: :to_s, wrapper: :full, input_html: {data: {placeholder: t(:choose)}} %>
-        <%= render partial: "/settings/strategy_groups/chosen_select", locals: {object_name: :project} %>
-
         <% strategies = f.object.strategy_group ? f.object.strategy_group.strategies : [] %>
         <%= f.association :strategy, :required => false, collection: (strategies + (f.object.strategy.nil? ? [] : [f.object.strategy])).uniq.sort_by { |asso| asso.to_s_with_year }, value_method: :id, disabled: (true if f.object.workflow_state == "project_approved" || f.object.workflow_state == "project_expensed" && current_user.role_names.grep(/acc/).empty? == true), label_method: :to_s_with_year, wrapper: :full, input_html: {data: {placeholder: t(:choose)}} %>
         <%= render partial: "/settings/strategies/chosen_select", locals: {object_name: :project} %>
@@ -54,13 +54,17 @@
         <%= f.association :tactic, :include_blank => false, :required => false, collection: (tactics + (f.object.tactic.nil? ? [] : [f.object.tactic])).uniq.sort_by { |asso| asso.to_s }, value_method: :id, disabled: (true if f.object.workflow_state == "project_approved" || f.object.workflow_state == "project_expensed" && current_user.role_names.grep(/acc/).empty? == true), label_method: :to_s, wrapper: :full, input_html: {data: {placeholder: t(:choose)}} %>
         <%= render partial: "/settings/tactics/chosen_select", locals: {object_name: :project} %>
 
-        <% unless f.object.policy.nil? %>
-          <% measures = f.object.tactic ? f.object.tactic.measures : [] %>
-          <%= f.association :measure, collection: (measures + (f.object.tactic.nil? ? [] : [f.object.tactic])).uniq.sort_by { |asso| asso.to_s }, value_method: :id, label_method: :to_s, disabled: (true if f.object.workflow_state == "project_approved" || f.object.workflow_state == "project_expensed" && current_user.role_names.grep(/acc/).empty? == true), wrapper: :full, input_html: {data: {placeholder: t(:choose)}} %>
-          <%= render partial: "/settings/measures/chosen_select", locals: {object_name: :project} %>
-        <% end %>
+        <% measures = f.object.tactic ? f.object.tactic.measures : [] %>
+        <%= f.association :measure, :required => false, collection: (measures + (f.object.measure.nil? ? [] : [f.object.measure])).uniq.sort_by { |asso| asso.to_s }, value_method: :id, disabled: (true if f.object.workflow_state == "project_approved" || f.object.workflow_state == "project_expensed" && current_user.role_names.grep(/acc/).empty? == true), label_method: :to_s, wrapper: :full, input_html: {data: {placeholder: t(:choose)}} %>
+        <%= render partial: "/settings/measures/chosen_select", locals: {object_name: :project} %>
 
-         <%= f.input :rationale, wrapper: :full %>
+        <%# <% unless f.object.policy.nil? % >
+          <% measures = f.object.tactic ? f.object.tactic.measures : [] % >
+          <%= f.association :measure, collection: (measures + (f.object.tactic.nil? ? [] : [f.object.tactic])).uniq.sort_by { |asso| asso.to_s }, value_method: :id, label_method: :to_s, disabled: (true if f.object.workflow_state == "project_approved" || f.object.workflow_state == "project_expensed" && current_user.role_names.grep(/acc/).empty? == true), wrapper: :full, input_html: {data: {placeholder: t(:choose)}} % >
+          <%= render partial: "/settings/measures/chosen_select", locals: {object_name: :project} % >
+        <% end % > %>
+
+        <%= f.input :rationale, wrapper: :full %>
 
         <%#= f.input :objective, wrapper: :full %>
         <div class="form-group">
@@ -205,62 +209,62 @@
             <%= render partial: "/projects/benefits/nested_form", locals: {f: f} %>
           </div>
         </div>
-
-        <div class="form-group">
-          <label class="col-md-12 control-label text-left"><%= Activity.model_name.human %></label>
+        
+        <%# <div class="form-group">
+          <label class="col-md-12 control-label text-left"><%= Activity.model_name.human % ></label>
           <div class="col-md-12">
-            <% @project.activities.each do |activity| %>
+            <% @project.activities.each do |activity| % >
               <div class="well">
                 <table class="table">
                   <tr>
                     <td nowrap class="text-right text-top" style="width:100px;">
-                      <b><%= Activity.human_attribute_name(:from_date) %>:</b>
+                      <b><%= Activity.human_attribute_name(:from_date) % >:</b>
                     </td>
                     <td class="text-top">
-                      <%= activity.from_date.to_s %>
+                      <%= activity.from_date.to_s % >
                     </td>
                   </tr>
                   <tr>
                     <td nowrap class="text-right text-top">
-                      <b><%= Activity.human_attribute_name(:to_date) %>:</b>
+                      <b><%= Activity.human_attribute_name(:to_date) % >:</b>
                     </td>
                     <td class="text-top">
-                      <%= activity.to_date.to_s %>
+                      <%= activity.to_date.to_s % >
                     </td>
                   </tr>
                   <tr>
                     <td nowrap class="text-right text-top">
-                      <b><%= Activity.human_attribute_name(:location) %>:</b>
+                      <b><%= Activity.human_attribute_name(:location) % >:</b>
                     </td>
                     <td class="text-top">
-                      <%= activity.location %>
+                      <%= activity.location % >
                     </td>
                   </tr>
                   <tr>
                     <td nowrap class="text-right text-top">
-                      <b><%= Activity.human_attribute_name(:number_of_participant) %>:</b>
+                      <b><%= Activity.human_attribute_name(:number_of_participant) % >:</b>
                     </td>
                     <td class="text-top">
-                      <%= activity.number_of_participant %>
+                      <%= activity.number_of_participant % >
                     </td>
                   </tr>
                   <tr>
                     <td nowrap class="text-right text-top">
-                      <b><%= Activity.human_attribute_name(:name) %>:</b>
+                      <b><%= Activity.human_attribute_name(:name) % >:</b>
                     </td>
                     <td class="text-top">
-                      <% activity.name.to_s.split("\n").each do |ddd| %>
-                        <%= ddd %><br/>
-                      <% end %>
+                      <% activity.name.to_s.split("\n").each do |ddd| % >
+                        <%= ddd % ><br/>
+                      <% end % >
                     </td>
                   </tr>
                 </table>
               </div>
               <div class="clearfix"></div>
-            <% end %>
-            <%= render partial: "/projects/activities/nested_form", locals: {f: f} if false %>
+            <% end % >
+            <%= render partial: "/projects/activities/nested_form", locals: {f: f} if false % >
           </div>
-        </div>
+        </div> %>
 
         <div class="form-group">
           <label class="col-md-12 control-label text-left"><%= Project.human_attribute_name(:problem_suggesstions) %></label>
@@ -276,12 +280,12 @@
           </div>
         </div>
 
-        <div class="form-group">
-          <label class="col-md-12 control-label text-left"><%= Project.human_attribute_name(:project_image) %></label>
+        <%# <div class="form-group">
+          <label class="col-md-12 control-label text-left"><%= Project.human_attribute_name(:project_image) % ></label>
           <div class="col-md-12">
-            <%= render partial: "/projects/project_images/nested_form", locals: {f: f} %>
+            <%= render partial: "/projects/project_images/nested_form", locals: {f: f} % >
           </div>
-        </div>
+        </div> %>
 
         <div class="col-md-6 col-md-offset-4">
           <%= render partial: "/form_actions_bottom", locals: {
